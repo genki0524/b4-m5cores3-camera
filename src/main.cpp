@@ -31,6 +31,20 @@ void sendDynamiGestureData(const String& message){
 }
 
 /*
+ * WiFiに接続するための関数
+ */
+void connectWiFi(){
+  WiFi.begin(ssid,pass);
+  while(WiFi.status() != WL_CONNECTED){
+    delay(500);
+    CoreS3.Display.print(".");
+  }
+  CoreS3.Display.println("WiFi connected");
+  CoreS3.Display.print("IP address = ");
+  CoreS3.Display.println(WiFi.localIP());
+}
+
+/*
  * gestureを取得してWebSocketで送信する関数
  */
 void getGesture(){
@@ -43,20 +57,6 @@ void getGesture(){
       connectWiFi();
     }
   }
-}
-
-/*
- * WiFiに接続するための関数
- */
-void connectWiFi(){
-  WiFi.begin(ssid,pass);
-  while(WiFi.status() != WL_CONNECTED){
-    delay(500);
-    CoreS3.Display.print(".");
-  }
-  CoreS3.Display.println("WiFi connected");
-  CoreS3.Display.print("IP address = ");
-  CoreS3.Display.println(WiFi.localIP());
 }
 
 /*
@@ -117,7 +117,7 @@ void setup() {
   connectWiFi();
 
   //webSocketの設定
-  webSocket.begin("websocketサーバーのIPアドレス", 1880,"/ws/m5CoreS3");
+  webSocket.begin("websocket-host", 1880,"/ws/m5CoreS3");
   webSocket.onEvent(webSocketEvent);
   webSocket.setReconnectInterval(500);
   
